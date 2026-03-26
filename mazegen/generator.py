@@ -1,4 +1,5 @@
 # gera de fato o labirinto
+# classe MazeGenertor obrigatoria
 
 
 class MazeGenerator:

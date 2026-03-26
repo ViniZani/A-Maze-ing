@@ -1,4 +1,7 @@
-# escreve no txt
+# escreve no txt os dados
+# 1) labiritnto em hexa \n
+# 2) entrada \n saida \n
+# 3) melhor path em coordenadas
 import os
 
 
