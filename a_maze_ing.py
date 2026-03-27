@@ -33,7 +33,8 @@ if __name__ == "__main__":
     print(f"final: {maze.final}")
     maze.draw_cell(maze.origin[0], maze.origin[1], 'E')
     maze.draw_cell(maze.final[0], maze.final[1], 'S')
-    maze.render()
+    maze.add_border()
+    maze.draw_maze()
     # ===========
     # write_hex_path()
     write_data(maze.origin[0], maze.origin[1], maze.final[0], maze.final[1])
