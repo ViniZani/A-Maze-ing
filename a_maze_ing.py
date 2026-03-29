@@ -8,6 +8,8 @@
 import sys
 from mazegen.config_parser import load_config
 from mazegen.generator import MazeGenerator
+from mazegen.renderer import add_border, draw_maze
+from mazegen.algorithms import dfs_algoritm
 from mazegen.writer import write_data
 
 if __name__ == "__main__":
@@ -31,10 +33,11 @@ if __name__ == "__main__":
     print(f"heigth: {maze.height}")
     print(f"origin: {maze.origin}")
     print(f"final: {maze.final}")
-    maze.draw_cell(maze.origin[0], maze.origin[1], 'E')
-    maze.draw_cell(maze.final[0], maze.final[1], 'S')
-    maze.add_border()
-    maze.draw_maze()
+    # draw_cell(maze.origin[0], maze.origin[1], 'E')
+    # draw_cell(maze.final[0], maze.final[1], 'S')
+    maze.grid = add_border(maze.grid, maze.width, maze.height)
+    dfs_algoritm(maze.grid)
+    draw_maze(maze.grid)
     # ===========
     # write_hex_path()
     write_data(maze.origin[0], maze.origin[1], maze.final[0], maze.final[1])
