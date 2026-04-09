@@ -11,4 +11,4 @@ class MazeGenerator:
         self.final = final
         self.perfect = perfect
         self.seed = seed
-        self.grid = [[15] * width for _ in range(height)]
+        self.grid = [[15] * width for i in range(height)]

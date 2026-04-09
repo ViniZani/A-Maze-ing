@@ -25,37 +25,26 @@ def convert_ascii(grid: list[list[int]], width: int, height: int,
     """
     rows = height * 2 + 1
     cols = width * 2 + 1
-
-    # inicializa canvas todo com parede
-    canvas = [[wall_char for _ in range(cols)] for _ in range(rows)]
+    canvas = [[wall_char for i in range(cols)] for j in range(rows)]
 
     for r in range(height):
         for c in range(width):
             cell = grid[r][c]
             cr = 2 * r + 1
             cc = 2 * c + 1
-            # centro da célula = caminho
             canvas[cr][cc] = path_char
 
-            # se não há parede ao norte (bit NORTH == 0), abra o espaço acima
             if not (cell & NORTH):
                 canvas[cr - 1][cc] = path_char
-            # se não há parede ao sul
             if not (cell & SOUTH):
                 canvas[cr + 1][cc] = path_char
-            # se não há parede à oeste
             if not (cell & WEST):
                 canvas[cr][cc - 1] = path_char
-            # se não há parede à leste
             if not (cell & EAST):
                 canvas[cr][cc + 1] = path_char
 
-    # opcional: abrir entradas/saídas (ex.: topo esquerda e baixo direita)
-    canvas[origin[0]][origin[1]] = "E"   # entrada à esquerda da célula (0,0)
-    canvas[final[0]][final[0]] = "X"  # saída à direita da última célula
+    canvas[origin[0]][origin[1]] = "E"
+    canvas[final[0]][final[0]] = "X"
 
-    # imprimir canvas
     for line in canvas:
         print("".join(line))
-
-

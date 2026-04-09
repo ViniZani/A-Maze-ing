@@ -1,6 +1,7 @@
-# At this File you will find all the logic to generate mazes perfects (one path away) and inperfects
+# At this File you will find all the logic to generate mazes
+# perfects (one path away) and inperfects (plus then one path)
 # The DFS algorithm just generate a perfect maze
-# To generate inperfect mazes, just broke the walls randomly
+# To generate inperfect mazes, it must broke the walls randomly
 import random
 
 NORTH = 1
