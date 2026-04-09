@@ -3,7 +3,7 @@
 
 
 class MazeGenerator:
-    def __init__(self, width: int, height: int, origin: tuple, 
+    def __init__(self, width: int, height: int, origin: tuple,
                  final: tuple, perfect=True, seed=None):
         self.width = width
         self.height = height

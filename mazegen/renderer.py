@@ -1,48 +1,61 @@
-# parte visual do labirinto
+# This file contais the visual part of the maze
 # implementa o terminal interativo
 # Marcar entry (E), exit (X) e caminho (.) quando solicitado
 # Implementar o menu interativo:
 #  1. Re-gerar maze  2. Show/Hide path  3. Mudar cor  4. Sair
-NORTH = 1
-EAST  = 2
-SOUTH = 4
-WEST  = 8
+from mazegen.algorithms import NORTH, SOUTH, EAST, WEST
 
 
-def draw_cell(grid: list[list], x: int, y: int, char: str):
+def draw_cell(grid: list[list[int]], x: int, y: int, char: str):
     if 0 <= y < len(grid) and 0 <= x < len(grid[0]):
         grid[y][x] = char
 
 
-def add_border(grid, width, height) -> list[list]:
-    border_grid = [[15] * (width + 2) for _ in range(height + 2)]
-    for i in range(len(grid)):
-        for j in range(len(grid[0])):
-            border_grid[i + 1][j + 1] = grid[i][j]
-    grid = border_grid
-    return grid
-
-
-def draw_maze(grid):
+def draw_maze(grid: list[list[int]]):
     for line in grid:
         print(" ".join(map(str, line)))
 
 
+def convert_ascii(grid: list[list[int]], width: int, height: int,
+                  origin: tuple, final: tuple, wall_char="█", path_char=" "):
+    """
+    Desenha o labirinto usando um canvas de caracteres.
+    Cada célula ocupa uma posição central em (2*r+1, 2*c+1).
+    Paredes ocupam as posições entre centros.
+    """
+    rows = height * 2 + 1
+    cols = width * 2 + 1
 
-"""def draw_maze(grid):
-    height = len(grid)
-    width = len(grid[0])
-    for row in range(height):
-        linha = ""
-        for col in range(width):
-            cell = grid[row][col]
+    # inicializa canvas todo com parede
+    canvas = [[wall_char for _ in range(cols)] for _ in range(rows)]
 
-            # checa cada parede da célula
-            norte = cell & NORTH  # != 0 se fechada
-            leste = cell & EAST
-            sul   = cell & SOUTH
-            oeste = cell & WEST
+    for r in range(height):
+        for c in range(width):
+            cell = grid[r][c]
+            cr = 2 * r + 1
+            cc = 2 * c + 1
+            # centro da célula = caminho
+            canvas[cr][cc] = path_char
 
-            # por enquanto só printa o hex de cada célula
-            linha += f"{cell:X} "
-        print(linha)"""
+            # se não há parede ao norte (bit NORTH == 0), abra o espaço acima
+            if not (cell & NORTH):
+                canvas[cr - 1][cc] = path_char
+            # se não há parede ao sul
+            if not (cell & SOUTH):
+                canvas[cr + 1][cc] = path_char
+            # se não há parede à oeste
+            if not (cell & WEST):
+                canvas[cr][cc - 1] = path_char
+            # se não há parede à leste
+            if not (cell & EAST):
+                canvas[cr][cc + 1] = path_char
+
+    # opcional: abrir entradas/saídas (ex.: topo esquerda e baixo direita)
+    canvas[origin[0]][origin[1]] = "E"   # entrada à esquerda da célula (0,0)
+    canvas[final[0]][final[0]] = "X"  # saída à direita da última célula
+
+    # imprimir canvas
+    for line in canvas:
+        print("".join(line))
+
+

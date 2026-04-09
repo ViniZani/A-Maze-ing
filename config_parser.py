@@ -22,12 +22,12 @@ def load_config(archive):
         output_file = os.getenv('OUTPUT_FILE')
         perfect = os.getenv('PERFECT')
         possibilty_perfect = [True, False]
-        if perfect == "True":
+        if perfect == "True" or perfect == "true":
             perfect = True
-        elif perfect == "False":
+        elif perfect == "False" or perfect == "false":
             perfect = False
         if output_file == '':
-            raise ValueError("Output_file config must cant be null")
+            raise ValueError("Output_file config must can't be null")
     except (Exception, ValueError) as e:
         print(e)
         exit(1)
