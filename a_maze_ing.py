@@ -8,8 +8,9 @@
 import sys
 from mazegen.config_parser import load_config
 from mazegen.generator import MazeGenerator
+from mazegen.algorithms import dfs_algorithm
+from mazegen.pattern_42 import forty_two_mark
 from mazegen.renderer import convert_ascii
-from mazegen.algorithms import dfs_algoritm
 from mazegen.writer import write_data, write_hex_path
 
 
@@ -20,14 +21,13 @@ def gen_maze(maze):
     # print(f"origin: {maze.origin}")
     # print(f"final: {maze.final}")
 
-    # draw_maze(maze.grid)
-    # print("\n======================================\n")
-    dfs_algoritm(maze.grid, maze.width, maze.height)
-    # draw_maze(maze.grid)
-    convert_ascii(maze.grid, maze.width, maze.height, maze.origin, maze.final)
-
-    # ===========
-    write_hex_path(maze.grid, maze.height, maze.width)
+    forty_two_mark(maze)
+    dfs_algorithm(maze)
+    # convert_ascii(maze.grid, maze.width, maze.height, maze.origin, maze.final)
+    canvas = convert_ascii(maze)
+    for line in canvas:
+        print("".join(line))
+    write_hex_path(maze)
     write_data(maze.origin[0], maze.origin[1], maze.final[0], maze.final[1])
     # write_cord_path()
 

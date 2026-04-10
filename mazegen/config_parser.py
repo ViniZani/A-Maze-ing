@@ -34,6 +34,10 @@ def load_config(archive):
     try:
         if origin == final or origin > final:
             raise ValueError("Origin must be smaller than final")
+        elif (origin[0] >= width or origin[1] >= height
+              or final[0] >= width or final[1] >= height):
+            raise ValueError("Origin and final must be within "
+                             "the interval of the maze")
         elif origin[0] < 0 or origin[1] < 0 or final[0] < 0 or final[1] < 0:
             raise ValueError("Coordinates must be input as positive integers")
         elif height < 0 or width < 0:
