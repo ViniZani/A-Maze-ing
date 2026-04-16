@@ -26,9 +26,11 @@ def forty_two_mark(maze):
                 if pattern[i][j] == 0:
                     for directions in Direction:
                         cell.walls[directions] = False
-                        cell.ftchar = "#"
+                        cell.ftchar = "E"
+                        cell.visited = True
                 if pattern[i][j] == 1:
                     for directions in Direction:
                         cell.walls[directions] = True
+                        cell.visited = True
     except ValueError as e:
         print(e)
