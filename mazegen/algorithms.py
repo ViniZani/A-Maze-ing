@@ -2,7 +2,7 @@
 # perfects (one path away) and inperfects (plus then one path)
 # The DFS algorithm just generate a perfect maze
 # To generate inperfect mazes, it must broke the walls randomly
-from random import random, shuffle, randint
+from random import random, shuffle, randint, choice
 from mazegen.generator import Direction
 
 
@@ -33,12 +33,28 @@ def carve_cells(maze, row, col):
 
 
 def broke_cells(maze, width, height):
+    print("Is an imperfect maze, let's break it!")
+    break_count = round(width * height * 0.1)
+    for _ in range(break_count):
+        r = randint(0, height - 2)
+        c = randint(0, width - 2)
+        current = maze.grid[r][c]
+        direction = choice(list(Direction))
+        dr, dc = direction.delta
+        nr, nc = r + dr, c + dc
+        if 0 <= nr < height and 0 <= nc < width:
+            neighbor = maze.grid[nr][nc]
+            current.connected(neighbor, direction)
+
+
+"""def broke_cells(maze, width, height):
     print("Is a Inperfect maze, lets broke it!")
     break_cells = round(width * height * 0.2)
     for _ in range(break_cells):
         rand_x = randint(0, width - 1)
         rand_y = randint(0, height - 1)
-        carve_cells(maze, rand_x, rand_y) # não fazer isso, gera recursividade infinita!!!! # noqa
+        
+        carve_cells(maze, rand_x, rand_y) # não fazer isso, gera recursividade infinita!!!! # noqa"""
 
 
 def validate_maze(grid):

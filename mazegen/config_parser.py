@@ -21,10 +21,10 @@ def load_config(archive):
         final = tuple(map(int, os.getenv('EXIT').split(',')))
         output_file = os.getenv('OUTPUT_FILE')
         perfect = os.getenv('PERFECT')
-        possibilty_perfect = [True, False]
-        if perfect == "True":
+        possibilty_perfect = [True, False, "True", "False", "true", "false"]
+        if perfect == "True" or perfect == "true":
             perfect = True
-        elif perfect == "False":
+        elif perfect == "False" or perfect == "false":
             perfect = False
         if output_file == '':
             raise ValueError("Output_file config must cant be null")

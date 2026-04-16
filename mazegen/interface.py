@@ -13,13 +13,17 @@ def gen_maze(maze):
     # print(f"heigth: {maze.height}")
     # print(f"origin: {maze.origin}")
     # print(f"final: {maze.final}")
-
+    if (maze.perfect is False):
+        print("Its a false maze")
     forty_two_mark(maze)
     validate_maze(maze.grid)
     dfs_algorithm(maze)
     if maze.perfect is False:
-        broke_cells(maze.grid, maze.width, maze.height)
+        broke_cells(maze, maze.width, maze.height)
     clear_and_reset()
+    # so p checkar a logica do false maze
+    # if maze.perfect is False:
+    #   print("Its a false maze")
     canvas = convert_ascii(maze)
     for line in canvas:
         print("".join(line))
@@ -28,7 +32,6 @@ def gen_maze(maze):
     # write_cord_path()
 
 
-# if __name__ == "__main__":
 def valid_input():
     argv = sys.argv
     argc = len(argv)
