@@ -59,3 +59,12 @@ class Cell:
     def connected(self, other_cell: bool, direction: Direction) -> None:
         self.walls[direction] = False
         other_cell.walls[direction.opposite] = False
+
+
+class Colors:
+    def __init__(self, wall, path, origin, exit, pattern):
+        self.wall = wall
+        self.path = path
+        self.origin = origin
+        self.exit = exit
+        self.pattern = pattern

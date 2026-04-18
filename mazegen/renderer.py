@@ -23,38 +23,41 @@ def draw_maze(grid: list[list[int]], horizontal_scale: int = 2) -> None:
         print("".join(str(ch) * scale for ch in line))
 
 
-def convert_ascii(maze, wall_char: str = "█",
-                  path_char: str = " ") -> list[list[str]]:
+def convert_ascii(maze, scheme) -> list[list[str]]:
     """Convert the object maze into one ASCII representation.
     Each maze cell is expanted in a matrix of chars,
     where walls are representates by `wall_char` and paths are `path_char`.
-    The origin coord is marked with 'E' and the exity with 'X'"""
+    The origin coord is marked with 'scheme.origin' 
+    and the exity with 'scheme.exit'"""
     rows = maze.height * 2 + 1
     cols = maze.width * 2 + 1
-    canvas = [[wall_char for i in range(cols)] for j in range(rows)]
+    canvas = [[scheme.wall for i in range(cols)] for j in range(rows)]
 
     for r in range(maze.height):
         for c in range(maze.width):
             cell = maze.grid[r][c]
             cr = 2 * r + 1
             cc = 2 * c + 1
-            canvas[cr][cc] = path_char
+            if cell.is_pattern_mark is True:
+                canvas[cr][cc] = scheme.pattern
+            else:
+                canvas[cr][cc] = scheme.path
 
             if not cell.walls[Direction.NORTH]:
-                canvas[cr - 1][cc] = path_char
+                canvas[cr - 1][cc] = scheme.path
             if not cell.walls[Direction.SOUTH]:
-                canvas[cr + 1][cc] = path_char
+                canvas[cr + 1][cc] = scheme.path
             if not cell.walls[Direction.WEST]:
-                canvas[cr][cc - 1] = path_char
+                canvas[cr][cc - 1] = scheme.path
             if not cell.walls[Direction.EAST]:
-                canvas[cr][cc + 1] = path_char
+                canvas[cr][cc + 1] = scheme.path
         ox, oy = maze.origin
         fx, fy = maze.final
         ocr, occ = 2 * oy + 1, 2 * ox + 1
         fcr, fcc = 2 * fy + 1, 2 * fx + 1
 
         if 0 <= ocr < rows and 0 <= occ < cols:
-            canvas[ocr][occ] = "E"
+            canvas[ocr][occ] = scheme.origin
         if 0 <= fcr < rows and 0 <= fcc < cols:
-            canvas[fcr][fcc] = "X"
+            canvas[fcr][fcc] = scheme.exit
     return canvas
