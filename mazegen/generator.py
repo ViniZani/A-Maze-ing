@@ -47,7 +47,7 @@ class Cell:
         self.row = row
         self.col = col
         self.visited = False
-        self.ftchar = None
+        self.is_pattern_mark = False
         self.walls = {
             Direction.NORTH: True,
             Direction.SOUTH: True,

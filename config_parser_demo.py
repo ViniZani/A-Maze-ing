@@ -4,7 +4,7 @@
 # Validar os valores são coerentes (entry != exit, dentro das bordar)
 # Retornar um dict com os parâmetros validados
 # Dar Raise em exceções do contexto (so pode int postivio)
-import os
+"""import os
 try:
     from dotenv import load_dotenv
 except ImportError:
@@ -49,4 +49,4 @@ def load_config(archive):
                     "perfect": perfect}
     except (Exception, ValueError) as e:
         print(e)
-        exit(1)
+        exit(1)"""

@@ -3,7 +3,7 @@ from mazegen.config_parser import load_config
 from mazegen.generator import MazeGenerator
 from mazegen.algorithms import dfs_algorithm, broke_cells, validate_maze
 from mazegen.pattern_42 import forty_two_mark
-from mazegen.renderer import convert_ascii, clear_and_reset
+from mazegen.renderer import convert_ascii, draw_maze, clear_and_reset
 from mazegen.writer import write_data, write_hex_path
 
 
@@ -25,8 +25,7 @@ def gen_maze(maze):
     # if maze.perfect is False:
     #   print("Its a false maze")
     canvas = convert_ascii(maze)
-    for line in canvas:
-        print("".join(line))
+    draw_maze(canvas)
     write_hex_path(maze)
     write_data(maze.origin[0], maze.origin[1], maze.final[0], maze.final[1])
     # write_cord_path()
