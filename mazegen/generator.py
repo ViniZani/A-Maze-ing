@@ -47,6 +47,7 @@ class Cell:
         self.row = row
         self.col = col
         self.visited = False
+        self.explored = False
         self.is_pattern_mark = False
         self.walls = {
             Direction.NORTH: True,
@@ -62,9 +63,11 @@ class Cell:
 
 
 class Colors:
-    def __init__(self, wall, path, origin, exit, pattern):
+    def __init__(self, wall, path,
+                 origin, exit, pattern, solver_path):
         self.wall = wall
         self.path = path
         self.origin = origin
         self.exit = exit
         self.pattern = pattern
+        self.solver_path = solver_path

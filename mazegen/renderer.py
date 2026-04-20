@@ -24,10 +24,10 @@ def draw_maze(grid: list[list[int]], horizontal_scale: int = 2) -> None:
 
 
 def convert_ascii(maze, scheme) -> list[list[str]]:
-    """Convert the object maze into one ASCII representation.
+    """Convert the maze into one ASCII representation.
     Each maze cell is expanted in a matrix of chars,
     where walls are representates by `wall_char` and paths are `path_char`.
-    The origin coord is marked with 'scheme.origin' 
+    The origin coord is marked with 'scheme.origin'
     and the exity with 'scheme.exit'"""
     rows = maze.height * 2 + 1
     cols = maze.width * 2 + 1
@@ -51,13 +51,16 @@ def convert_ascii(maze, scheme) -> list[list[str]]:
                 canvas[cr][cc - 1] = scheme.path
             if not cell.walls[Direction.EAST]:
                 canvas[cr][cc + 1] = scheme.path
-        ox, oy = maze.origin
-        fx, fy = maze.final
-        ocr, occ = 2 * oy + 1, 2 * ox + 1
-        fcr, fcc = 2 * fy + 1, 2 * fx + 1
+    orow, ocol = maze.origin
+    frow, fcol = maze.final
 
-        if 0 <= ocr < rows and 0 <= occ < cols:
-            canvas[ocr][occ] = scheme.origin
-        if 0 <= fcr < rows and 0 <= fcc < cols:
-            canvas[fcr][fcc] = scheme.exit
+    ocr = 2 * orow + 1
+    occ = 2 * ocol + 1
+    fcr = 2 * frow + 1
+    fcc = 2 * fcol + 1
+
+    if 0 <= ocr < rows and 0 <= occ < cols:
+        canvas[ocr][occ] = scheme.origin
+    if 0 <= fcr < rows and 0 <= fcc < cols:
+        canvas[fcr][fcc] = scheme.exit
     return canvas

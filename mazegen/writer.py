@@ -36,9 +36,28 @@ def write_data(origin_x, origin_y, final_x, final_y):
         archive.write(content)
 
 
-def write_cord_path():
+def cardinal_path(path):
+    coord_path = []
+    for i in range(len(path) - 1):
+        curr_cell = path[i]
+        next_cell = path[i+1]
+        if next_cell[0] < curr_cell[0]:
+            coord_path.append("N")
+        elif next_cell[0] > curr_cell[0]:
+            coord_path.append("S")
+        elif next_cell[1] > curr_cell[1]:
+            coord_path.append("E")
+        elif next_cell[1] < curr_cell[1]:
+            coord_path.append("W")
+    return coord_path
+
+
+def write_cord_path(path):
     """Write the best path direct's coordinates in the file"""
-    coord_path = "SWESWENSEWNNEESSWENNWEE"
+    coord_path = cardinal_path(path)
+    # for check if the path is wirte:
+    # print(f"The Cardinal Path is: {coord_path}")
     with open(os.getenv('OUTPUT_FILE'), 'a', encoding='utf-8') as archive:
-        archive.write(coord_path)
+        for i in range(len(coord_path)):
+            archive.write(coord_path[i])
         archive.write("\n")

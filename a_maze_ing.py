@@ -5,5 +5,5 @@
 # Chamar writer para salvar o output no output.txt
 # Chamar renderer para exibir o labirinto com a lib grafica
 # Tratar as exceptions
-from mazegen.interface import valid_input
-valid_input()
+from mazegen.interface import menu
+menu()
