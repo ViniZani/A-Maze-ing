@@ -115,13 +115,13 @@ def menu() -> None:
 
             elif order == "4":
                 clear_and_reset()
-                print("Let's Solve the Maze!")
                 canvas = convert_ascii(maze, current_scheme)
                 path = solve_bfs(maze)
                 animated_path(canvas, path, current_scheme)
 
             elif order == "5":
                 clear_and_reset()
+                canvas = convert_ascii(maze, current_scheme)
                 animated_gen_maze(canvas, current_scheme)
 
             elif order == "6":

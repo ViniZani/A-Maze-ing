@@ -72,7 +72,8 @@ def animated_gen_maze(canvas, scheme, horizontal_scale: int = 2):
     scale = max(1, horizontal_scale)
     for line in canvas:
         formatted_line = "".join(str(cell) * scale for cell in line)
-        print(formatted_line)
+        print(formatted_line, flush=True)
+        print("\a", end="", flush=True)
         sleep(0.1)
 
 
