@@ -4,7 +4,7 @@ from mazegen.generator import MazeGenerator
 from mazegen.types import Colors
 from src.renderer import (convert_ascii, draw_maze,
                           clear_and_reset, animated_gen_maze)
-from mazegen.solver import render_path, animated_path
+from src.solver import solve_bfs, render_path, animated_path
 from src.writer import write_data, write_hex_path, write_cord_path
 from time import sleep
 
@@ -18,7 +18,8 @@ def gen_maze(maze, scheme) -> None:
 
     write_hex_path(maze)
     write_data(maze.origin[0], maze.origin[1], maze.final[0], maze.final[1])
-    write_cord_path(maze.solution)
+    path = solve_bfs(maze)
+    write_cord_path(path)
 
 
 def menu() -> None:
@@ -86,7 +87,8 @@ def menu() -> None:
                 canvas = convert_ascii(maze, current_scheme)
 
                 if not show_path:
-                    render_path(canvas, maze.solution, current_scheme)
+                    path = solve_bfs(maze)
+                    render_path(canvas, path, current_scheme)
                     draw_maze(canvas)
                     show_path = True
                 else:
@@ -105,14 +107,16 @@ def menu() -> None:
                 clear_and_reset()
                 canvas = convert_ascii(maze, current_scheme)
                 if show_path:
-                    render_path(canvas, maze.solution, current_scheme)
+                    path = solve_bfs(maze)
+                    render_path(canvas, path, current_scheme)
                 draw_maze(canvas)
 
             elif order == "4":
                 clear_and_reset()
                 print("Let's Solve the Maze!")
                 canvas = convert_ascii(maze, current_scheme)
-                animated_path(canvas, maze.solution, current_scheme)
+                path = solve_bfs(maze)
+                animated_path(canvas, path, current_scheme)
 
             elif order == "5":
                 clear_and_reset()
@@ -128,10 +132,10 @@ def menu() -> None:
                 print('')
                 print("Broking the walls", end="")
                 for i in range(3):
-                    sleep(1)
+                    sleep(0.5)
                     print(".", end="")
                     sys.stdout.flush()
-                sleep(1)
+                sleep(0.5)
                 print("\nExiting the maze!...")
                 sleep(1)
                 break

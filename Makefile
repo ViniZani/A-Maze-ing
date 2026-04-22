@@ -21,7 +21,7 @@ install:
 
 build:
 	$(PIP) install build
-	$(PYTHON) -m build
+	$(PYTHON) $(BUILD)
 
 run:
 	$(PYTHON) a_maze_ing.py config.txt
@@ -50,7 +50,7 @@ fclean: clean
 	rm -f *.whl *.tar.gz
 
 
-package: fclean
+package: fclean install
 	$(PYTHON) $(BUILD)
 	cp dist/*.whl .
 	cp dist/*.tar.gz .
