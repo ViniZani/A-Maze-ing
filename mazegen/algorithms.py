@@ -33,7 +33,7 @@ def carve_cells(maze, row, col) -> None:
 
 def broke_cells(maze, width: int, height: int) -> None:
     """Broke cells randomly to turn a perfect maze an inperfect"""
-    break_count = round(width * height * 0.1)
+    break_count = round(width * height * 0.5)
     protected = getattr(maze, "protected_cells", set())
     for _ in range(break_count):
         row = randint(0, height - 2)

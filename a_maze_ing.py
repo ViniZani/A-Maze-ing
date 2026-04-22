@@ -2,18 +2,20 @@ import sys
 from src.config_parser import load_config
 from mazegen.generator import MazeGenerator
 from mazegen.types import Colors
-from src.renderer import (convert_ascii, draw_maze,
+from src.renderer import (convert_ascii, draw_maze, size_validation,
                           clear_and_reset, animated_gen_maze)
 from src.solver import solve_bfs, render_path, animated_path
 from src.writer import write_data, write_hex_path, write_cord_path
 from time import sleep
 
 
-def gen_maze(maze, scheme) -> None:
+def gen_maze(maze, scheme, config_data) -> None:
     maze.generate()
 
     clear_and_reset()
     canvas = convert_ascii(maze, scheme)
+    if size_validation(config_data) is True:
+        return
     draw_maze(canvas)
 
     write_hex_path(maze)
@@ -58,10 +60,10 @@ def menu() -> None:
 
     current_scheme = default_scheme
     show_path = False
-    gen_maze(maze, current_scheme)
+    gen_maze(maze, current_scheme, config_data)
     while True:
         try:
-            print("\n=== A-Maze-ING ===")
+            print("\n=== A-Maze-ing ===")
             print("1. Regenerate maze")
             print("2. Show/Hide path from entry to exit")
             print("3. Rotate Maze colors")
@@ -80,7 +82,7 @@ def menu() -> None:
                     final_coord,
                     config_data['perfect']
                 )
-                gen_maze(maze, current_scheme)
+                gen_maze(maze, current_scheme, config_data)
 
             elif order == "2":
                 clear_and_reset()
@@ -125,19 +127,16 @@ def menu() -> None:
             elif order == "6":
                 print("Cleaning the cache", end="")
                 for i in range(3):
-                    sleep(1)
+                    sleep(0.2)
                     print(".", end="")
                     sys.stdout.flush()
                 sleep(1)
-                print('')
-                print("Broking the walls", end="")
+                print("\nBroking the walls", end="")
                 for i in range(3):
-                    sleep(0.5)
+                    sleep(0.2)
                     print(".", end="")
                     sys.stdout.flush()
-                sleep(0.5)
                 print("\nExiting the maze!...")
-                sleep(1)
                 break
             else:
                 print("\n[ERRO]: Please, choose between 1 and 4")

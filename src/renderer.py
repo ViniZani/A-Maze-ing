@@ -74,3 +74,25 @@ def animated_gen_maze(canvas, scheme, horizontal_scale: int = 2):
         formatted_line = "".join(str(cell) * scale for cell in line)
         print(formatted_line)
         sleep(0.1)
+
+
+def size_validation(config_data) -> bool:
+    try:
+        error = False
+        window = os.get_terminal_size()
+        maze_row = (config_data['width'] * 4) + 1
+        maze_col = config_data['height']
+        if maze_row > window.columns:
+            error = True
+            raise ValueError("Your window doesn't have spaces "
+                             "to show the maze")
+        if maze_col > window.lines:
+            error = True
+            raise ValueError("Your window doesn't have spaces "
+                             "to show the maze")
+    except ValueError as e:
+        print(e)
+    finally:
+        print(window)
+        print(maze_row)
+        return error
