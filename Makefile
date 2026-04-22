@@ -1,40 +1,61 @@
 SHELL := /bin/sh
 
-PY ?= python3
-VENV_DIR ?= .venv
-PIP := $(VENV_DIR)/bin/pip
-PYTHON := $(VENV_DIR)/bin/python
-FLAKE8 := $(VENV_DIR)/bin/flake8
-MYPY := $(VENV_DIR)/bin/mypy
+
+VENV_DIR := .venv
+PYTHON   := $(VENV_DIR)/bin/python
+PIP      := $(VENV_DIR)/bin/pip
+FLAKE8   := $(VENV_DIR)/bin/flake8
+MYPY     := $(VENV_DIR)/bin/mypy
+BUILD    := -m build
 
 
+all: run
 
-SRCS =	a_maze_ing.py
+
 install:
-	pip install -r config.txt
+	python3 -m venv $(VENV_DIR)
+	$(PIP) install --upgrade pip
+	$(PIP) install python-dotenv
+	$(PIP) install flake8 mypy build
+	$(PIP) install -e .
+
+build:
+	$(PIP) install build
+	$(PYTHON) -m build
 
 run:
-	python a_maze_ing.py
+	$(PYTHON) a_maze_ing.py config.txt
+
+
+debug:
+	$(PYTHON) -m pdb a_maze_ing.py config.txt
+
+
+lint:
+	$(FLAKE8) --exclude $(VENV_DIR)
+	$(MYPY) . --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
+
+lint-strict:
+	$(FLAKE8) --exclude $(VENV_DIR)
+	$(MYPY) . --strict
+
 
 clean:
-	rm -rf __pycache__
+	rm -rf __pycache__ .mypy_cache .pytest_cache
+	find . -type d -name "__pycache__" -exec rm -rf {} +
 
-fclean:
-	rm -f $(OBJS) $(NAME)
 
-re: fclean all
+fclean: clean
+	rm -rf $(VENV_DIR) dist *.egg-info build
+	rm -f *.whl *.tar.gz
 
-.PHONY: all clean fclean re
 
-#• install: Install project dependencies using pip, uv, pipx, or any other package
-#manager of your choice.
-#• run: Execute the main script of your project (e.g., via Python interpreter).
-#• debug: Run the main script in debug mode using Python’s built-in debugger (e.g.,
-#pdb).
-#• clean: Remove temporary files or caches (e.g., __pycache__, .mypy_cache) to
-#keep the project environment clean.
-#• lint: Execute the commands flake8 . and mypy . --warn-return-any
-#--warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs
-#--check-untyped-defs
-#• lint-strict (optional): Execute the commands flake8 . and mypy . --strict
+package: fclean
+	$(PYTHON) $(BUILD)
+	cp dist/*.whl .
+	cp dist/*.tar.gz .
+
+re: fclean install
+
+.PHONY: all install run debug clean fclean lint lint-strict re package
 

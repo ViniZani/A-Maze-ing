@@ -3,8 +3,9 @@
 # Marcar entry (E), exit (X) e caminho (.) quando solicitado
 # Implementar o menu interativo:
 #  1. Re-gerar maze  2. Show/Hide path  3. Mudar cor  4. Sair
-from mazegen.generator import Direction
+from mazegen.types import Direction
 import os
+from time import sleep
 
 
 def clear_and_reset() -> None:
@@ -64,3 +65,12 @@ def convert_ascii(maze, scheme) -> list[list[str]]:
     if 0 <= fcr < rows and 0 <= fcc < cols:
         canvas[fcr][fcc] = scheme.exit
     return canvas
+
+
+def animated_gen_maze(canvas, scheme, horizontal_scale: int = 2):
+    """Imprime o labirinto linha por linha com animação e escala."""
+    scale = max(1, horizontal_scale)
+    for line in canvas:
+        formatted_line = "".join(str(cell) * scale for cell in line)
+        print(formatted_line)
+        sleep(0.1)

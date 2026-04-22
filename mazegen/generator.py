@@ -1,6 +1,7 @@
-# gera de fato o labirinto
-# classe MazeGenertor obrigatoria
-from enum import Enum
+from mazegen.types import Cell
+from mazegen.pattern_42 import forty_two_mark
+from mazegen.algorithms import dfs_algorithm, validate_maze, broke_cells
+# from src.solver import solve_bfs
 
 
 class MazeGenerator:
@@ -14,60 +15,16 @@ class MazeGenerator:
         self.seed = seed
         self.grid = [[Cell(r, c) for c in range(width)] for r in range(height)]
 
+    def generate(self):
+        """Calls the functions that will generate the maze using the
+        DFS algorithm, validate if the maze is ok by the requirements
+        and add the 42 pattern if it is possible"""
+        validate_maze(self.grid)
+        forty_two_mark(self)
+        dfs_algorithm(self)
 
-class Direction(Enum):
-    NORTH = 1
-    SOUTH = 2
-    EAST = 4
-    WEST = 8
+        if not self.perfect:
+            broke_cells(self, self.width, self.height)
 
-    @property
-    def opposite(self) -> None:
-        opposite_direct = {
-            Direction.NORTH: Direction.SOUTH,
-            Direction.SOUTH: Direction.NORTH,
-            Direction.EAST: Direction.WEST,
-            Direction.WEST: Direction.EAST
-        }
-        return opposite_direct[self]
-
-    @property
-    def delta(self) -> None:
-        dif_direct = {
-            Direction.NORTH: (-1, 0),
-            Direction.SOUTH: (1, 0),
-            Direction.EAST: (0, 1),
-            Direction.WEST: (0, -1)
-        }
-        return dif_direct[self]
-
-
-class Cell:
-    def __init__(self, row: int, col: int) -> None:
-        self.row = row
-        self.col = col
-        self.visited = False
-        self.explored = False
-        self.is_pattern_mark = False
-        self.walls = {
-            Direction.NORTH: True,
-            Direction.SOUTH: True,
-            Direction.EAST: True,
-            Direction.WEST: True
-        }
-        self.neighbors = {}
-
-    def connected(self, other_cell: bool, direction: Direction) -> None:
-        self.walls[direction] = False
-        other_cell.walls[direction.opposite] = False
-
-
-class Colors:
-    def __init__(self, wall, path,
-                 origin, exit, pattern, solver_path):
-        self.wall = wall
-        self.path = path
-        self.origin = origin
-        self.exit = exit
-        self.pattern = pattern
-        self.solver_path = solver_path
+        # self.solution = solve_bfs(self)
+        return self.grid

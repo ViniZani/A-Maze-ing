@@ -1,0 +1,13 @@
+[tool.poetry]
+name = "mazegen"
+version = "0.1.0"
+description = "A maze generator and solver program. Generates perfect and imperfect mazes."
+authors = ["vzani-st", "kbentes-"]
+packages = [{include = "mazegen"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

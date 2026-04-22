@@ -3,7 +3,7 @@
 # The DFS algorithm just generate a perfect maze
 # To generate inperfect mazes, it must broke the walls randomly
 from random import random, shuffle, randint, choice
-from mazegen.generator import Direction
+from mazegen.types import Direction
 
 
 def dfs_algorithm(maze, seed=None) -> None:
@@ -55,7 +55,7 @@ def broke_cells(maze, width: int, height: int) -> None:
             current.connected(neighbor, direction)
 
 
-def validate_maze(grid):
+def validate_maze(grid) -> None:
     """Valids if the maze can't has large open areas.
     Corridors can't be wider than 2 cells. For example,
     you can have 2x3 or 3x2 open area, but never a 3x3 open area."""
@@ -67,5 +67,5 @@ def validate_maze(grid):
             open_cells = sum(cell == 0 for row in block for cell in row)
             if open_cells == 9:
                 raise ValueError(
-                    f"Matriz inválida: área 3x3 aberta encontrada"
-                    f"começando em ({r}, {c})")
+                    f"[ERRO]: área 3x3 aberta encontrada"
+                    f"starting in ({r}, {c})")

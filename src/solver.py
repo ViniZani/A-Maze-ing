@@ -2,10 +2,13 @@
 # Implementar BFS (Breadth-First Search) de entry até exit
 # Retornar o caminho como lista de direções: N, E, S, W
 # Usado tanto pelo writer.py (output) quanto pelo renderer.py (exibição)
-from mazegen.generator import Direction
+from mazegen.types import Direction
+from typing import List, Tuple
+from src.renderer import draw_maze, clear_and_reset
+from time import sleep
 
 
-def solve_bfs(maze):
+def solve_bfs(maze) -> List[Tuple]:
     for row in maze.grid:
         for cell in row:
             cell.explored = False
@@ -47,7 +50,7 @@ def solve_bfs(maze):
     return path
 
 
-def render_path(canvas, path, scheme):
+def render_path(canvas, path: List[Tuple], scheme) -> None:
     if not path:
         return
     for i in range(len(path)):
@@ -64,3 +67,23 @@ def render_path(canvas, path, scheme):
             mc = (2 * c + 1 + 2 * pc + 1) // 2
             if canvas[mr][mc] not in [scheme.origin, scheme.exit]:
                 canvas[mr][mc] = scheme.solver_path
+
+
+def animated_path(canvas, path, scheme):
+    for i in range(len(path)):
+        r, c = path[i]
+        cr = 2 * r + 1
+        cc = 2 * c + 1
+
+        if canvas[cr][cc] not in [scheme.origin, scheme.exit]:
+            canvas[cr][cc] = scheme.solver_path
+        if i > 0:
+            pr, pc = path[i-1]
+            mr = (2 * r + 1 + 2 * pr + 1) // 2
+            mc = (2 * c + 1 + 2 * pc + 1) // 2
+            if canvas[mr][mc] not in [scheme.origin, scheme.exit]:
+                canvas[mr][mc] = scheme.solver_path
+        draw_maze(canvas)
+        sleep(0.1)
+        if i < len(path) - 1:
+            clear_and_reset()

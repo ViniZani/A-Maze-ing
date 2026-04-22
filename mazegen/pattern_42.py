@@ -3,7 +3,7 @@
 # Fechar todas as paredes dessas células (hex F = 1111)
 # Verificar se o tamanho do maze permite o padrão
 # Printar mensagem de erro se o maze for pequeno demais
-from mazegen.generator import Direction
+from mazegen.types import Direction
 
 
 def _set_edge(maze, row: int, col: int, direction, is_open: bool) -> None:

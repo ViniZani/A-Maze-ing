@@ -1,10 +1,5 @@
-# escreve no txt os dados
-# 1) labiritnto em hexa \n
-# 2) entrada \n saida \n
-# 3) melhor path em coordenadas
 import os
-from mazegen.generator import Direction
-from mazegen.generator import Cell
+from mazegen.types import Direction, Cell
 
 
 def conv_cell_hex(cell: Cell):

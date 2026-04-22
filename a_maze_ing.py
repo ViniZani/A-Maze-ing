@@ -1,9 +1,147 @@
-# main do programa (python a_amze_ing.py conig.txt)
-# Ler o argumento sys.argv[1] (config.txt)
-# Chamar config_parser para carregar a config do txt
-# Passar instancias do MazeGenerator com os parametros
-# Chamar writer para salvar o output no output.txt
-# Chamar renderer para exibir o labirinto com a lib grafica
-# Tratar as exceptions
-from mazegen.interface import menu
-menu()
+import sys
+from src.config_parser import load_config
+from mazegen.generator import MazeGenerator
+from mazegen.types import Colors
+from src.renderer import (convert_ascii, draw_maze,
+                          clear_and_reset, animated_gen_maze)
+from mazegen.solver import render_path, animated_path
+from src.writer import write_data, write_hex_path, write_cord_path
+from time import sleep
+
+
+def gen_maze(maze, scheme) -> None:
+    maze.generate()
+
+    clear_and_reset()
+    canvas = convert_ascii(maze, scheme)
+    draw_maze(canvas)
+
+    write_hex_path(maze)
+    write_data(maze.origin[0], maze.origin[1], maze.final[0], maze.final[1])
+    write_cord_path(maze.solution)
+
+
+def menu() -> None:
+    argv = sys.argv
+    argc = len(argv)
+    try:
+        if argc == 2:
+            config_data = load_config(argv[1])
+        else:
+            raise TypeError("Usage: python a_maze_ing.py config.txt")
+    except Exception as e:
+        print(f"[ERRO]: {e}")
+        sys.exit(1)
+
+    origin_coord = (config_data['origin'][1], config_data['origin'][0])
+    final_coord = (config_data['final'][1], config_data['final'][0])
+
+    maze = MazeGenerator(
+        config_data['width'],
+        config_data['height'],
+        origin_coord,
+        final_coord,
+        config_data['perfect']
+    )
+
+    default_scheme = Colors("\033[37m█\033[0m", " ", "\033[92m█\033[0m",
+                            "\033[91m█\033[0m", "█", "\033[94m█\033[0m")
+
+    colors_scheme = Colors("\033[94m█\033[0m", " ", "\033[92m█\033[0m",
+                           "\033[91m█\033[0m", "\033[37m█\033[0m",
+                           "\033[93m█\033[0m")
+
+    hard_mode = Colors("\033[91m█\033[0m", "\033[93m█\033[0m",
+                       "\033[30m█\033[0m", "\033[97m█\033[0m",
+                       "\033[38;5;208m█\033[0m", "\033[38;5;129m█\033[0m")
+
+    current_scheme = default_scheme
+    show_path = False
+    gen_maze(maze, current_scheme)
+    while True:
+        try:
+            print("\n=== A-Maze-ING ===")
+            print("1. Regenerate maze")
+            print("2. Show/Hide path from entry to exit")
+            print("3. Rotate Maze colors")
+            print("4. Animated path")
+            print("5. Animated Maze Generator")
+            print("6. Exit")
+
+            order = input("Choice (1-6): ").strip()
+
+            if order == "1":
+                show_path = False
+                maze = MazeGenerator(
+                    config_data['width'],
+                    config_data['height'],
+                    origin_coord,
+                    final_coord,
+                    config_data['perfect']
+                )
+                gen_maze(maze, current_scheme)
+
+            elif order == "2":
+                clear_and_reset()
+                canvas = convert_ascii(maze, current_scheme)
+
+                if not show_path:
+                    render_path(canvas, maze.solution, current_scheme)
+                    draw_maze(canvas)
+                    show_path = True
+                else:
+                    draw_maze(canvas)
+                    show_path = False
+
+            elif order == "3":
+                if current_scheme == default_scheme:
+                    current_scheme = colors_scheme
+
+                elif current_scheme == colors_scheme:
+                    current_scheme = hard_mode
+
+                else:
+                    current_scheme = default_scheme
+                clear_and_reset()
+                canvas = convert_ascii(maze, current_scheme)
+                if show_path:
+                    render_path(canvas, maze.solution, current_scheme)
+                draw_maze(canvas)
+
+            elif order == "4":
+                clear_and_reset()
+                print("Let's Solve the Maze!")
+                canvas = convert_ascii(maze, current_scheme)
+                animated_path(canvas, maze.solution, current_scheme)
+
+            elif order == "5":
+                clear_and_reset()
+                animated_gen_maze(canvas, current_scheme)
+
+            elif order == "6":
+                print("Cleaning the cache", end="")
+                for i in range(3):
+                    sleep(1)
+                    print(".", end="")
+                    sys.stdout.flush()
+                sleep(1)
+                print('')
+                print("Broking the walls", end="")
+                for i in range(3):
+                    sleep(1)
+                    print(".", end="")
+                    sys.stdout.flush()
+                sleep(1)
+                print("\nExiting the maze!...")
+                sleep(1)
+                break
+            else:
+                print("\n[ERRO]: Please, choose between 1 and 4")
+
+        except (ValueError, KeyboardInterrupt):
+            print("\nOperation cancelled.")
+            break
+
+
+if __name__ == "__main__":
+    menu()

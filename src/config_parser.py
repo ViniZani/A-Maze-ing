@@ -12,7 +12,7 @@ except ImportError:
     python -m pip install python-dotenv")
 
 
-def load_config(archive):
+def load_config(archive) -> None:
     load_dotenv(dotenv_path=archive)
     try:
         width = int(os.getenv('WIDTH'))
