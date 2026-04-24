@@ -12,8 +12,32 @@ except ImportError:
     python -m pip install python-dotenv")
 
 
+def _validate_format(archive: str) -> None:
+    try:
+        with open(archive, 'r') as f:
+            for i, line in enumerate(f.readlines(), 1):
+                line = line.strip()
+                if not line or line.startswith('#'):
+                    continue
+                if '=' not in line:
+                    print(f"Error: line {i} not in KEY=VALUE format: '{line}'")
+                    exit(1)
+    except FileNotFoundError:
+        print(f"Error: file '{archive}' not found")
+        exit(1)
+
+
+def _check_required_keys() -> None:
+    for key in ['WIDTH', 'HEIGHT', 'ENTRY', 'EXIT', 'OUTPUT_FILE', 'PERFECT']:
+        if os.getenv(key) is None:
+            print(f"Error: missing required key '{key}' in config file")
+            exit(1)
+
+
 def load_config(archive) -> None:
+    _validate_format(archive)
     load_dotenv(dotenv_path=archive)
+    _check_required_keys()
     try:
         width = int(os.getenv('WIDTH'))
         height = int(os.getenv('HEIGHT'))

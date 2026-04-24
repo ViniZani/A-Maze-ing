@@ -26,7 +26,7 @@ def write_hex_path(maze):
 
 def write_data(origin_x, origin_y, final_x, final_y):
     """Write the origin and final cartesian's coordinates in the file"""
-    content = f"\n{origin_x},{origin_y}\n{final_x}, {final_y}\n"
+    content = f"\n{origin_x},{origin_y}\n{final_x},{final_y}\n"
     with open(os.getenv('OUTPUT_FILE'), 'a', encoding='utf-8') as archive:
         archive.write(content)
 

@@ -2,7 +2,7 @@
 # perfects (one path away) and inperfects (plus then one path)
 # The DFS algorithm just generate a perfect maze
 # To generate inperfect mazes, it must broke the walls randomly
-from random import random, shuffle, randint, choice
+import random
 from mazegen.types import Direction
 
 
@@ -20,7 +20,7 @@ def carve_cells(maze, row, col) -> None:
     current_cell = maze.grid[row][col]
     current_cell.visited = True
     directions = list(Direction)
-    shuffle(directions)
+    random.shuffle(directions)
     for direction in directions:
         direct_row, direct_col = direction.delta
         new_row, new_col = row + direct_row, col + direct_col
@@ -36,14 +36,14 @@ def broke_cells(maze, width: int, height: int) -> None:
     break_count = round(width * height * 0.5)
     protected = getattr(maze, "protected_cells", set())
     for _ in range(break_count):
-        row = randint(0, height - 2)
-        col = randint(0, width - 2)
+        row = random.randint(0, height - 2)
+        col = random.randint(0, width - 2)
         if (row, col) in protected:
             continue
         current = maze.grid[row][col]
         if current.is_pattern_mark:
             continue
-        direction = choice(list(Direction))
+        direction = random.choice(list(Direction))
         direct_row, direct_col = direction.delta
         neighbor_row, neighbor_col = row + direct_row, col + direct_col
         if 0 <= neighbor_row < height and 0 <= neighbor_col < width:

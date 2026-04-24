@@ -1,16 +1,15 @@
 from enum import Enum
-from typing import Dict, Tuple, Any
+from typing import Dict, Tuple
 
 
 class Direction(Enum):
     NORTH = 1
-    SOUTH = 2
-    EAST = 4
-    WEST = 8
+    EAST  = 2
+    SOUTH = 4
+    WEST  = 8
 
     @property
     def opposite(self) -> 'Direction':
-        # Retorna um membro da própria Enum Direction
         opposite_direct: Dict[Direction, Direction] = {
             Direction.NORTH: Direction.SOUTH,
             Direction.SOUTH: Direction.NORTH,
@@ -21,13 +20,12 @@ class Direction(Enum):
 
     @property
     def delta(self) -> Tuple[int, int]:
-        # Retorna uma tupla de dois inteiros
-        dif_direct: Dict[Direction, Tuple[int, int]] = {
-            Direction.NORTH: (-1, 0),
-            Direction.SOUTH: (1, 0),
-            Direction.EAST: (0, 1),
-            Direction.WEST: (0, -1)
-        }
+        dif_direct = {
+        Direction.NORTH: (-1, 0),
+        Direction.EAST:  ( 0, 1),
+        Direction.SOUTH: ( 1, 0),
+        Direction.WEST:  ( 0,-1)
+    }
         return dif_direct[self]
 
 
@@ -38,18 +36,15 @@ class Cell:
         self.visited: bool = False
         self.explored: bool = False
         self.is_pattern_mark: bool = False
-        # Dicionário mapeando a Enum Direction para booleanos
         self.walls: Dict[Direction, bool] = {
             Direction.NORTH: True,
             Direction.SOUTH: True,
             Direction.EAST: True,
             Direction.WEST: True
         }
-        # Dicionário de vizinhos mapeando a direção para o objeto Cell
         self.neighbors: Dict[Direction, 'Cell'] = {}
 
     def connected(self, other_cell: 'Cell', direction: Direction) -> None:
-        # Aqui alteramos de other_cell: bool para other_cell: 'Cell'
         self.walls[direction] = False
         other_cell.walls[direction.opposite] = False
 
