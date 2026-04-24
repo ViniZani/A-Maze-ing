@@ -1,11 +1,7 @@
-# This file contais the visual part of the maze
-# implementa o terminal interativo
-# Marcar entry (E), exit (X) e caminho (.) quando solicitado
-# Implementar o menu interativo:
-#  1. Re-gerar maze  2. Show/Hide path  3. Mudar cor  4. Sair
-from mazegen.types import Direction
 import os
 from time import sleep
+from typing import Any, List
+from mazegen.types import Direction
 
 
 def clear_and_reset() -> None:
@@ -16,33 +12,36 @@ def clear_and_reset() -> None:
         os.system("clear")
 
 
-def draw_maze(grid: list[list[int]], horizontal_scale: int = 2) -> None:
-    """Turn the render maze in a good aspect
-    using 2 * x_position to match the y position"""
+def draw_maze(grid: List[List[Any]], horizontal_scale: int = 2) -> None:
+    """
+    Render the maze with a better aspect ratio.
+    Uses a horizontal scale to match the vertical height of characters.
+    """
     scale = max(1, horizontal_scale)
     for line in grid:
         print("".join(str(ch) * scale for ch in line))
 
 
-def convert_ascii(maze, scheme) -> list[list[str]]:
-    """Convert the maze into one ASCII representation.
-    Each maze cell is expanted in a matrix of chars,
-    where walls are representates by `wall_char` and paths are `path_char`.
-    The origin coord is marked with 'scheme.origin'
-    and the exity with 'scheme.exit'"""
-    rows = maze.height * 2 + 1
-    cols = maze.width * 2 + 1
-    canvas = [[scheme.wall for i in range(cols)] for j in range(rows)]
+def convert_ascii(maze: Any, scheme: Any) -> List[List[str]]:
+    """
+    Convert the maze into an ASCII representation.
+    Each maze cell is expanded into a matrix of chars,
+    where walls and paths are defined by the scheme.
+    """
+    rows: int = maze.height * 2 + 1
+    cols: int = maze.width * 2 + 1
+    canvas: List[List[str]] = [
+        [scheme.wall for _ in range(cols)] for _ in range(rows)
+    ]
 
     for r in range(maze.height):
         for c in range(maze.width):
             cell = maze.grid[r][c]
-            cr = 2 * r + 1
-            cc = 2 * c + 1
-            if cell.is_pattern_mark is True:
-                canvas[cr][cc] = scheme.pattern
-            else:
-                canvas[cr][cc] = scheme.path
+            cr, cc = 2 * r + 1, 2 * c + 1
+
+            canvas[cr][cc] = (
+                scheme.pattern if cell.is_pattern_mark else scheme.path
+            )
 
             if not cell.walls[Direction.NORTH]:
                 canvas[cr - 1][cc] = scheme.path
@@ -52,48 +51,50 @@ def convert_ascii(maze, scheme) -> list[list[str]]:
                 canvas[cr][cc - 1] = scheme.path
             if not cell.walls[Direction.EAST]:
                 canvas[cr][cc + 1] = scheme.path
-    orow, ocol = maze.origin
-    frow, fcol = maze.final
 
-    ocr = 2 * orow + 1
-    occ = 2 * ocol + 1
-    fcr = 2 * frow + 1
-    fcc = 2 * fcol + 1
+    o_r, o_c = maze.origin
+    f_r, f_c = maze.final
+    ocr, occ = 2 * o_r + 1, 2 * o_c + 1
+    fcr, fcc = 2 * f_r + 1, 2 * f_c + 1
 
     if 0 <= ocr < rows and 0 <= occ < cols:
         canvas[ocr][occ] = scheme.origin
     if 0 <= fcr < rows and 0 <= fcc < cols:
         canvas[fcr][fcc] = scheme.exit
+
     return canvas
 
 
-def animated_gen_maze(canvas, scheme, horizontal_scale: int = 2):
-    """Imprime o labirinto linha por linha com animação e escala."""
+def animated_gen_maze(
+    canvas: List[List[str]],
+    horizontal_scale: int = 2
+) -> None:
+    """Print the maze line by line with animation and scaling."""
     scale = max(1, horizontal_scale)
     for line in canvas:
         formatted_line = "".join(str(cell) * scale for cell in line)
         print(formatted_line, flush=True)
         print("\a", end="", flush=True)
-        sleep(0.1)
+        sleep(0.05)
 
 
-def size_validation(config_data) -> bool:
+def size_validation(config_data: dict[str, Any]) -> bool:
+    """
+    Validate if the terminal window size is enough for the maze.
+    Returns True if there is an error (insufficient space).
+    """
+    error = False
     try:
-        error = False
         window = os.get_terminal_size()
-        maze_row = (config_data['width'] * 4) + 1
-        maze_col = config_data['height']
-        if maze_row > window.columns:
+        maze_row_needed = (config_data['width'] * 2) + 1
+        maze_col_needed = (config_data['height'] * 2) + 1
+
+        if maze_row_needed > window.columns or maze_col_needed > window.lines:
             error = True
-            raise ValueError("Your window doesn't have spaces "
-                             "to show the maze")
-        if maze_col > window.lines:
-            error = True
-            raise ValueError("Your window doesn't have spaces "
-                             "to show the maze")
-    except ValueError as e:
-        print(e)
-    finally:
-        print(window)
-        print(maze_row)
-        return error
+            raise ValueError(
+                f"Terminal too small ({window.columns}x{window.lines}). "
+                f"Needed at least {maze_row_needed}x{maze_col_needed}."
+            )
+    except (ValueError, OSError) as e:
+        print(f"[ERROR]: {e}")
+    return error

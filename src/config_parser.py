@@ -1,18 +1,17 @@
-# Lê e valida o arquivo de configuração KEY=VALUE.
-# Ignorar linhas com #
-# Parsear as KEYS do txt WIDTH, HEIGHT, ENTRY, EXIT, OUTPUT_FILE, PERFECT
-# Validar os valores são coerentes (entry != exit, dentro das bordar)
-# Retornar um dict com os parâmetros validados
-# Dar Raise em exceções do contexto (so pode int postivio)
 import os
+from typing import Dict, Any, Tuple, List, Optional
+
 try:
     from dotenv import load_dotenv
 except ImportError:
-    print("lib dotenv isnt installed, please run: \
-    python -m pip install python-dotenv")
+    print(
+        "lib dotenv isnt installed, please run: "
+        "python -m pip install python-dotenv"
+    )
 
 
 def _validate_format(archive: str) -> None:
+    """Read the file and check if it follows the KEY=VALUE format."""
     try:
         with open(archive, 'r') as f:
             for i, line in enumerate(f.readlines(), 1):
@@ -28,53 +27,90 @@ def _validate_format(archive: str) -> None:
 
 
 def _check_required_keys() -> None:
-    for key in ['WIDTH', 'HEIGHT', 'ENTRY', 'EXIT', 'OUTPUT_FILE', 'PERFECT']:
+    """Verify if all mandatory keys exist in the environment."""
+    keys: List[str] = [
+        'WIDTH', 'HEIGHT', 'ENTRY', 'EXIT', 'OUTPUT_FILE', 'PERFECT'
+    ]
+    for key in keys:
         if os.getenv(key) is None:
             print(f"Error: missing required key '{key}' in config file")
             exit(1)
 
 
-def load_config(archive) -> None:
+def load_config(archive: str) -> Dict[str, Any]:
+    """
+    Load, parse and validate the maze configuration file.
+
+    Returns a dictionary with validated parameters.
+    """
     _validate_format(archive)
     load_dotenv(dotenv_path=archive)
     _check_required_keys()
+
     try:
-        width = int(os.getenv('WIDTH'))
-        height = int(os.getenv('HEIGHT'))
-        origin = tuple(map(int, os.getenv('ENTRY').split(',')))
-        final = tuple(map(int, os.getenv('EXIT').split(',')))
-        output_file = os.getenv('OUTPUT_FILE')
-        perfect = os.getenv('PERFECT')
-        possibilty_perfect = [True, False, "True", "False", "true", "false"]
-        if perfect == "True" or perfect == "true":
+        # Casts e checks para satisfazer o Mypy (os.getenv pode ser None)
+        width_str = os.getenv('WIDTH')
+        height_str = os.getenv('HEIGHT')
+        entry_str = os.getenv('ENTRY')
+        exit_str = os.getenv('EXIT')
+
+        width: int = int(width_str) if width_str else 0
+        height: int = int(height_str) if height_str else 0
+
+        # Conversão de coordenadas (Tuple[int, int])
+        origin: Tuple[int, ...] = tuple(
+            map(int, entry_str.split(','))
+        ) if entry_str else (0, 0)
+
+        final: Tuple[int, ...] = tuple(
+            map(int, exit_str.split(','))
+        ) if exit_str else (0, 0)
+
+        output_file: Optional[str] = os.getenv('OUTPUT_FILE')
+        perfect_raw: Optional[str] = os.getenv('PERFECT')
+
+        # Lógica de conversão do booleano PERFECT
+        perfect: Any = perfect_raw
+        possibility_perfect: List[Any] = [
+            True, False, "True", "False", "true", "false"
+        ]
+
+        if perfect_raw in ["True", "true"]:
             perfect = True
-        elif perfect == "False" or perfect == "false":
+        elif perfect_raw in ["False", "false"]:
             perfect = False
+
         if output_file == '':
             raise ValueError("Output_file config must cant be null")
-    except (Exception, ValueError) as e:
-        print(e)
+
+    except ValueError as e:
+        print(f"Configuration error: {e}")
         exit(1)
+
     try:
         if origin == final or origin > final:
             raise ValueError("Origin must be smaller than final")
-        elif (origin[0] >= width or origin[1] >= height
-              or final[0] >= width or final[1] >= height):
-            raise ValueError("Origin and final must be within "
-                             "the interval of the maze")
-        elif origin[0] < 0 or origin[1] < 0 or final[0] < 0 or final[1] < 0:
-            raise ValueError("Coordinates must be input as positive integers")
-        elif height < 0 or width < 0:
-            raise ValueError("Maze dimension's must be input as positive\
-                             integers")
-        if perfect not in possibilty_perfect:
+
+        if (origin[0] >= width or origin[1] >= height
+                or final[0] >= width or final[1] >= height):
+            raise ValueError("Origin and final must be within the maze")
+
+        if any(c < 0 for c in origin) or any(c < 0 for c in final):
+            raise ValueError("Coordinates must be positive integers")
+
+        if height < 0 or width < 0:
+            raise ValueError("Maze dimensions must be positive integers")
+
+        if perfect not in possibility_perfect:
             raise ValueError("Perfect instruction must be True or False")
-        else:
-            return {"width": width,
-                    "height": height,
-                    "origin": origin,
-                    "final": final,
-                    "perfect": perfect}
-    except (Exception, ValueError) as e:
+
+        return {
+            "width": width,
+            "height": height,
+            "origin": origin,
+            "final": final,
+            "perfect": perfect
+        }
+    except ValueError as e:
         print(e)
         exit(1)

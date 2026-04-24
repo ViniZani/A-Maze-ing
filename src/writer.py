@@ -1,41 +1,58 @@
 import os
+from typing import Any, List, Tuple, Optional
 from mazegen.types import Direction, Cell
 
 
-def conv_cell_hex(cell: Cell):
+def conv_cell_hex(cell: Cell) -> int:
+    """Convert the cell's wall configuration to an integer bitmask (0-15)."""
     val = 0
-    if cell.walls[Direction.NORTH] is True:
+    if cell.walls[Direction.NORTH]:
         val += Direction.NORTH.value
-    if cell.walls[Direction.SOUTH] is True:
+    if cell.walls[Direction.SOUTH]:
         val += Direction.SOUTH.value
-    if cell.walls[Direction.EAST] is True:
+    if cell.walls[Direction.EAST]:
         val += Direction.EAST.value
-    if cell.walls[Direction.WEST] is True:
+    if cell.walls[Direction.WEST]:
         val += Direction.WEST.value
     return val
 
 
-def write_hex_path(maze):
-    """Write the maze in hexadecimal chars in the file"""
-    with open(os.getenv('OUTPUT_FILE'), 'w', encoding='utf-8') as archive:
+def write_hex_path(maze: Any) -> None:
+    """Write the maze grid as hexadecimal characters to the output file."""
+    output_file: Optional[str] = os.getenv('OUTPUT_FILE')
+    if not output_file:
+        return
+
+    with open(output_file, 'w', encoding='utf-8') as archive:
         for i in range(maze.height):
             for j in range(maze.width):
                 archive.write(f"{conv_cell_hex(maze.grid[i][j]):X}")
             archive.write("\n")
 
 
-def write_data(origin_x, origin_y, final_x, final_y):
-    """Write the origin and final cartesian's coordinates in the file"""
+def write_data(
+    origin_x: int,
+    origin_y: int,
+    final_x: int,
+    final_y: int
+) -> None:
+    """Write the origin and final coordinates to the output file."""
+    output_file: Optional[str] = os.getenv('OUTPUT_FILE')
+    if not output_file:
+        return
+
     content = f"\n{origin_x},{origin_y}\n{final_x},{final_y}\n"
-    with open(os.getenv('OUTPUT_FILE'), 'a', encoding='utf-8') as archive:
+    with open(output_file, 'a', encoding='utf-8') as archive:
         archive.write(content)
 
 
-def cardinal_path(path):
-    coord_path = []
+def cardinal_path(path: List[Tuple[int, int]]) -> List[str]:
+    """Convert a list of coordinates into a list of cardinal directions."""
+    coord_path: List[str] = []
     for i in range(len(path) - 1):
         curr_cell = path[i]
-        next_cell = path[i+1]
+        next_cell = path[i + 1]
+
         if next_cell[0] < curr_cell[0]:
             coord_path.append("N")
         elif next_cell[0] > curr_cell[0]:
@@ -47,12 +64,14 @@ def cardinal_path(path):
     return coord_path
 
 
-def write_cord_path(path):
-    """Write the best path direct's coordinates in the file"""
+def write_cord_path(path: List[Tuple[int, int]]) -> None:
+    """Write the cardinal direction path (N, S, E, W) to the output file."""
+    output_file: Optional[str] = os.getenv('OUTPUT_FILE')
+    if not output_file:
+        return
+
     coord_path = cardinal_path(path)
-    # for check if the path is wirte:
-    # print(f"The Cardinal Path is: {coord_path}")
-    with open(os.getenv('OUTPUT_FILE'), 'a', encoding='utf-8') as archive:
-        for i in range(len(coord_path)):
-            archive.write(coord_path[i])
+    with open(output_file, 'a', encoding='utf-8') as archive:
+        for direction in coord_path:
+            archive.write(direction)
         archive.write("\n")
