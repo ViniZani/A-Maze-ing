@@ -62,22 +62,30 @@ def broke_cells(maze: Any, width: int, height: int) -> None:
             current.connected(neighbor, direction)
 
 
-def validate_maze(grid: List[List[Any]]) -> None:
+def validate_maze(grid: List[List[Any]], width: int, height: int) -> bool:
     """
-    Validate if the maze has large open areas.
-    Corridors can't be wider than 2 cells. For example,
-    you can have 2x3 or 3x2 open area, but never a 3x3 open area.
+    Validate the maze structure.
+
+    Checks if there are any 3x3 open areas in the grid, which would violate
+    the complexity constraints of the maze.
+    Returns False if an open area is found, True otherwise.
     """
-    rows: int = len(grid)
-    cols: int = len(grid[0]) if rows > 0 else 0
+    for r in range(height - 2):
+        for c in range(width - 2):
+            if _is_open_3x3(grid, r, c):
+                return False
+    return True
 
-    for r in range(rows - 2):
-        for c in range(cols - 2):
-            block = [grid[r + i][c:c + 3] for i in range(3)]
-            open_cells = sum(cell == 0 for row in block for cell in row)
 
-            if open_cells == 9:
-                raise ValueError(
-                    f"[ERRO]: área 3x3 aberta encontrada "
-                    f"starting in ({r}, {c})"
-                )
+def _is_open_3x3(grid: List[List[Any]], r: int, c: int) -> bool:
+    """Check for an open 3x3 block starting at (r, c)."""
+    for row in range(r, r + 3):
+        for col in range(c, c + 2):
+            if grid[row][col].walls[Direction.EAST]:
+                return False
+
+    for row in range(r, r + 2):
+        for col in range(c, c + 3):
+            if grid[row][col].walls[Direction.SOUTH]:
+                return False
+    return True

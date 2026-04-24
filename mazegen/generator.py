@@ -34,7 +34,7 @@ class MazeGenerator:
         Validates the requirements and adds the 42 pattern if possible.
         Returns the generated grid of cells.
         """
-        validate_maze(self.grid)
+        validate_maze(self.grid, self.width, self.height)
         forty_two_mark(self)
         dfs_algorithm(self, self.seed)
 

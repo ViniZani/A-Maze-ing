@@ -31,17 +31,16 @@ def write_hex_path(maze: Any) -> None:
 
 
 def write_data(
-    origin_x: int,
-    origin_y: int,
-    final_x: int,
-    final_y: int
+    origin_row: int,
+    origin_col: int,
+    final_row: int,
+    final_col: int
 ) -> None:
-    """Write the origin and final coordinates to the output file."""
+    """Write the origin and final coordinates in X,Y format to the file."""
     output_file: Optional[str] = os.getenv('OUTPUT_FILE')
     if not output_file:
         return
-
-    content = f"\n{origin_x},{origin_y}\n{final_x},{final_y}\n"
+    content = f"\n{origin_col},{origin_row}\n{final_col},{final_row}\n"
     with open(output_file, 'a', encoding='utf-8') as archive:
         archive.write(content)
 

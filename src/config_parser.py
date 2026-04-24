@@ -40,7 +40,6 @@ def _check_required_keys() -> None:
 def load_config(archive: str) -> Dict[str, Any]:
     """
     Load, parse and validate the maze configuration file.
-
     Returns a dictionary with validated parameters.
     """
     _validate_format(archive)
@@ -48,7 +47,6 @@ def load_config(archive: str) -> Dict[str, Any]:
     _check_required_keys()
 
     try:
-        # Casts e checks para satisfazer o Mypy (os.getenv pode ser None)
         width_str = os.getenv('WIDTH')
         height_str = os.getenv('HEIGHT')
         entry_str = os.getenv('ENTRY')
@@ -57,7 +55,6 @@ def load_config(archive: str) -> Dict[str, Any]:
         width: int = int(width_str) if width_str else 0
         height: int = int(height_str) if height_str else 0
 
-        # Conversão de coordenadas (Tuple[int, int])
         origin: Tuple[int, ...] = tuple(
             map(int, entry_str.split(','))
         ) if entry_str else (0, 0)
@@ -69,7 +66,6 @@ def load_config(archive: str) -> Dict[str, Any]:
         output_file: Optional[str] = os.getenv('OUTPUT_FILE')
         perfect_raw: Optional[str] = os.getenv('PERFECT')
 
-        # Lógica de conversão do booleano PERFECT
         perfect: Any = perfect_raw
         possibility_perfect: List[Any] = [
             True, False, "True", "False", "true", "false"
