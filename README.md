@@ -1,7 +1,7 @@
 
 # A-Maze-ing
 
-*This project has been created as part of the 42 curriculum by [vzani-st], [kbentes-].*
+*This project has been created as part of the 42 curriculum by vzani-st, kbentes-.*
 
 ---
 
@@ -86,26 +86,26 @@ seed (int, optional): Seed for deterministic generation.
 perfect (bool): Defines if the maze will have cycles or be a strict tree.
 ```
 ### Team and Project Management
-[vzani-st]: Responsible for the DFS algorithm logic, the mazegen module structure, and the ASCII rendering system.
+vzani-st: Responsible for the DFS algorithm logic, the mazegen module structure, and the ASCII rendering system.
 
-[kbentes-]: Responsible for the code review, organizate the project search algorithms (BFS) for solving, system.
+kbentes-: Responsible for the code review, organizate the project search algorithms (BFS) for solving, system.
 
-Planning and Evolution
+### Planning and Evolution
 The initial planning consisted of three phases: Data Structure, Generation Algorithm, and Interface. During development, we realized the need for an extra "Type Sanitization" phase to pass the rigorous Mypy tests. While this delayed the final polishing of the UI, it significantly increased the system's stability.
 
-Successes and Improvements
+### Successes and Improvements
 What worked well: Separating the generation engine (mazegen) from the interface logic (renderer) allowed for isolated algorithm testing.
 
 What could be improved: The ANSI color system works perfectly on Linux/macOS but required additional adjustments for older Windows terminals.
 
-Tools Used
-Python 3.10+: Core language.
+Tools Used:
+- Python 3.10+: Core language.
 
-Flake8/Mypy: Style and typing assurance.
+- Flake8/Mypy: Style and typing assurance.
 
-Make: Task automation.
+- Make: Task automation.
 
-Git: Version control.
+- Git: Version control.
 
 ### Resources
 
