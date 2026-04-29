@@ -77,5 +77,4 @@ def validate_ft_mark(maze):
     if len(maze.protected_cells) > 0:
         have_42 = True
     if have_42 is False:
-        print("[ERROR] This size can't receive the 42 mark,"
-              "please gen a bigger maze")
+        print("[ERROR] Maze too small for 42 pattern.\n")

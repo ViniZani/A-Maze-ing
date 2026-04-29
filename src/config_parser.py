@@ -29,10 +29,10 @@ def _validate_format(archive: str) -> None:
 def _check_required_keys() -> None:
     """Verify if all mandatory keys exist in the environment."""
     keys: List[str] = [
-        'WIDTH', 'HEIGHT', 'ENTRY', 'EXIT', 'OUTPUT_FILE', 'PERFECT'
+        'WIDTH', 'HEIGHT', 'ENTRY', 'EXIT', 'OUTPUT_FILE', 'PERFECT',
     ]
     for key in keys:
-        if os.getenv(key) is None:
+        if os.getenv(key) is None and os.getenv(key.lower()) is None:
             print(f"Error: missing required key '{key}' in config file")
             exit(1)
 
@@ -47,10 +47,10 @@ def load_config(archive: str) -> Dict[str, Any]:
     _check_required_keys()
 
     try:
-        width_str = os.getenv('WIDTH')
-        height_str = os.getenv('HEIGHT')
-        entry_str = os.getenv('ENTRY')
-        exit_str = os.getenv('EXIT')
+        width_str = os.getenv('WIDTH') or os.getenv('width')
+        height_str = os.getenv('HEIGHT') or os.getenv('height')
+        entry_str = os.getenv('ENTRY') or os.getenv('entry')
+        exit_str = os.getenv('EXIT') or os.getenv('exit')
 
         width: int = int(width_str) if width_str else 0
         height: int = int(height_str) if height_str else 0
@@ -63,17 +63,16 @@ def load_config(archive: str) -> Dict[str, Any]:
             map(int, exit_str.split(','))
         ) if exit_str else (0, 0)
 
-        output_file: Optional[str] = os.getenv('OUTPUT_FILE')
-        perfect_raw: Optional[str] = os.getenv('PERFECT')
+        output_file: Optional[str] = os.getenv('OUTPUT_FILE') \
+            or os.getenv('output_file')
+        perfect_raw: Optional[str] = os.getenv('PERFECT') \
+            or os.getenv('perfect')
 
         perfect: Any = perfect_raw
-        possibility_perfect: List[Any] = [
-            True, False, "True", "False", "true", "false"
-        ]
 
-        if perfect_raw in ["True", "true"]:
+        if str(perfect_raw).upper() == "TRUE":
             perfect = True
-        elif perfect_raw in ["False", "false"]:
+        elif str(perfect_raw).upper() == "FALSE":
             perfect = False
 
         if output_file == '':
@@ -97,7 +96,7 @@ def load_config(archive: str) -> Dict[str, Any]:
         if height < 0 or width < 0:
             raise ValueError("Maze dimensions must be positive integers")
 
-        if perfect not in possibility_perfect:
+        if perfect is not True and perfect is not False:
             raise ValueError("Perfect instruction must be True or False")
 
         return {
