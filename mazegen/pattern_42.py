@@ -26,10 +26,6 @@ def forty_two_mark(maze: Any) -> None:
     If the maze is too small, raises an error message.
     """
     if maze.width <= 10 or maze.height <= 7:
-        print(
-            "[ERROR] This size can't receive the 42 mark, "
-            "please gen a bigger maze"
-        )
         return
 
     pattern = [
@@ -64,3 +60,12 @@ def forty_two_mark(maze: Any) -> None:
             _set_edge(maze, row_p, col_p, direction, False)
 
     maze.protected_cells = protected
+
+
+def validate_ft_mark(maze):
+    have_42 = False
+    if len(maze.protected_cells) > 0:
+        have_42 = True
+    if have_42 is False:
+        print("[ERROR] This size can't receive the 42 mark,"
+              "please gen a bigger maze")

@@ -5,6 +5,7 @@ from typing import Any, Dict, Tuple
 from src.config_parser import load_config
 from mazegen.generator import MazeGenerator
 from mazegen.types import Colors
+from mazegen.pattern_42 import validate_ft_mark
 from src.renderer import (
     convert_ascii, draw_maze, size_validation,
     clear_and_reset, animated_gen_maze
@@ -15,9 +16,9 @@ from src.writer import write_data, write_hex_path, write_cord_path
 
 def gen_maze(maze: Any, scheme: Colors, config_data: Dict[str, Any]) -> None:
     """Generate the maze logic, render it and save to a file."""
-    maze.generate()
-
     clear_and_reset()
+    maze.generate()
+    validate_ft_mark(maze)
     canvas = convert_ascii(maze, scheme)
     if size_validation(config_data) is True:
         return

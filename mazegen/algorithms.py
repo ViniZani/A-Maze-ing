@@ -65,7 +65,6 @@ def broke_cells(maze: Any, width: int, height: int) -> None:
 def validate_maze(grid: List[List[Any]], width: int, height: int) -> bool:
     """
     Validate the maze structure.
-
     Checks if there are any 3x3 open areas in the grid, which would violate
     the complexity constraints of the maze.
     Returns False if an open area is found, True otherwise.
