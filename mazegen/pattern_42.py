@@ -23,7 +23,7 @@ def _set_edge(
 def forty_two_mark(maze: Any) -> None:
     """
     Draw the 42 mark into the maze if it's possible.
-    If the maze is too small, raises an error message.
+    If the maze is too small to have the 42 pattern, return.
     """
     if maze.width <= 10 or maze.height <= 7:
         return
@@ -40,7 +40,17 @@ def forty_two_mark(maze: Any) -> None:
     center_col: int = maze.width // 2
     beg_row: int = center_row - 2
     beg_col: int = center_col - 3
-
+    try:
+        for i in range(5):
+            for j in range(7):
+                current_coord = (beg_row + i, beg_col + j)
+                if current_coord == maze.origin or current_coord == maze.final:
+                    raise ValueError("[42 pattern Error]: Entry and Exit "
+                                     "can't be inside tha maze, "
+                                     "please choose another coordinate")
+    except ValueError as e:
+        print(e)
+        exit(1)
     protected: Set[Tuple[int, int]] = set()
 
     for i in range(5):
