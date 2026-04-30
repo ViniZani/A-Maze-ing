@@ -143,7 +143,7 @@ def menu() -> None:
                 print("\nExiting the maze!...")
                 break
             else:
-                print("\n[ERRO]: Please, choose between 1 and 6")
+                print("\n[ERROR]: Please, choose between 1 and 6")
 
         except (ValueError, KeyboardInterrupt):
             print("\nOperation cancelled.")

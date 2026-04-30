@@ -132,4 +132,4 @@ Environment Bug Fixing: Diagnosing compatibility errors between Unix Makefiles a
 
 Documentation: Initial structuring of Docstrings following the PEP 257 standard.
 
-Optimization: Used to anwser pontual questions.
+Optimization: Used to answer pontual questions.

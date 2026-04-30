@@ -20,7 +20,7 @@ def _validate_format(archive: str) -> None:
                 if not line or line.startswith('#'):
                     continue
                 if not re.match(r'^[^=]+=[^=]+$', line):
-                    raise SyntaxError(f"Syntax error: line {i}"
+                    raise SyntaxError(f"Syntax error: line {i} "
                                       f"not in KEY=VALUE format: '{line}'")
     except FileNotFoundError:
         raise FileNotFoundError(f"File '{archive}' not found.")
@@ -54,6 +54,9 @@ def load_config(archive: str) -> Dict[str, Any]:
 
         width: int = int(width_str) if width_str else 0
         height: int = int(height_str) if height_str else 0
+
+        if len(entry_str.split(',')) != 2 or len(exit_str.split(',')) != 2:
+            raise ValueError("Entry and Exit must be in the format 'x,y'.")
 
         origin: Tuple[int, ...] = tuple(
             map(int, entry_str.split(','))
