@@ -40,7 +40,7 @@ def menu() -> None:
         else:
             raise TypeError("Usage: python a_maze_ing.py config.txt")
     except Exception as e:
-        print(f"[ERRO]: {e}")
+        print(f"[ERROR]: {e}")
         sys.exit(1)
 
     origin_coord: Tuple[int, int] = (

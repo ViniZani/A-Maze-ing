@@ -1,4 +1,5 @@
 import os
+import re
 from typing import Dict, Any, Tuple, List, Optional
 
 try:
@@ -18,12 +19,10 @@ def _validate_format(archive: str) -> None:
                 line = line.strip()
                 if not line or line.startswith('#'):
                     continue
-                if '=' not in line:
-                    print(f"Error: line {i} not in KEY=VALUE format: '{line}'")
-                    exit(1)
+                if not re.match(r'^[^=]+=[^=]+$', line):
+                    raise SyntaxError(f"Syntax error: line {i} not in KEY=VALUE format: '{line}'")
     except FileNotFoundError:
-        print(f"Error: file '{archive}' not found")
-        exit(1)
+        raise FileNotFoundError(f"File '{archive}' not found.")
 
 
 def _check_required_keys() -> None:
@@ -32,9 +31,8 @@ def _check_required_keys() -> None:
         'WIDTH', 'HEIGHT', 'ENTRY', 'EXIT', 'OUTPUT_FILE', 'PERFECT',
     ]
     for key in keys:
-        if os.getenv(key) is None and os.getenv(key.lower()) is None:
-            print(f"Error: missing required key '{key}' in config file")
-            exit(1)
+        if (os.getenv(key) is None and os.getenv(key.lower()) is None) or os.getenv(key) == "":
+            raise ValueError(f"Missing required key '{key}' in config file")
 
 
 def load_config(archive: str) -> Dict[str, Any]:
@@ -79,8 +77,7 @@ def load_config(archive: str) -> Dict[str, Any]:
             raise ValueError("Output_file config must cant be null")
 
     except ValueError as e:
-        print(f"Configuration error: {e}")
-        exit(1)
+        raise ValueError(f"Configuration error: {e}")
 
     try:
         if origin == final or origin > final:

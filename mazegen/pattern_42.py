@@ -45,9 +45,8 @@ def forty_two_mark(maze: Any) -> None:
             for j in range(7):
                 current_coord = (beg_row + i, beg_col + j)
                 if current_coord == maze.origin or current_coord == maze.final:
-                    raise ValueError("[42 pattern Error]: Entry and Exit "
-                                     "can't be inside tha maze, "
-                                     "please choose another coordinate")
+                    raise ValueError("[42 pattern Error]: Entry and Exit cannot "
+                        "be inside the 42 pattern. Choose different coordinates.")
     except ValueError as e:
         print(e)
         exit(1)
