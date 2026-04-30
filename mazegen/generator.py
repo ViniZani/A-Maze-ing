@@ -1,7 +1,7 @@
 from typing import List, Optional, Tuple
 from mazegen.types import Cell
 from mazegen.pattern_42 import forty_two_mark
-from mazegen.algorithms import dfs_algorithm, validate_maze, broke_cells
+from mazegen.algorithms import dfs_algorithm, broke_cells
 
 
 class MazeGenerator:
@@ -34,7 +34,6 @@ class MazeGenerator:
         Validates the requirements and adds the 42 pattern if possible.
         Returns the generated grid of cells.
         """
-        validate_maze(self.grid, self.width, self.height)
         forty_two_mark(self)
         dfs_algorithm(self, self.seed)
 

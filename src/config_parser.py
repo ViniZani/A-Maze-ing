@@ -55,7 +55,8 @@ def load_config(archive: str) -> Dict[str, Any]:
         width: int = int(width_str) if width_str else 0
         height: int = int(height_str) if height_str else 0
 
-        if len(entry_str.split(',')) != 2 or len(exit_str.split(',')) != 2:
+        if (len(str(entry_str).split(',')) != 2 or
+                len(str(exit_str).split(',')) != 2):
             raise ValueError("Entry and Exit must be in the format 'x,y'.")
 
         origin: Tuple[int, ...] = tuple(

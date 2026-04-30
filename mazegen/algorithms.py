@@ -1,5 +1,5 @@
 import random
-from typing import Any, Optional, List, Set
+from typing import Any, Optional, Set
 from mazegen.types import Direction
 
 
@@ -60,31 +60,3 @@ def broke_cells(maze: Any, width: int, height: int) -> None:
                 continue
 
             current.connected(neighbor, direction)
-
-
-def validate_maze(grid: List[List[Any]], width: int, height: int) -> bool:
-    """
-    Validate the maze structure.
-    Checks if there are any 3x3 open areas in the grid, which would violate
-    the complexity constraints of the maze.
-    Returns False if an open area is found, True otherwise.
-    """
-    for r in range(height - 2):
-        for c in range(width - 2):
-            if _is_open_3x3(grid, r, c):
-                return False
-    return True
-
-
-def _is_open_3x3(grid: List[List[Any]], r: int, c: int) -> bool:
-    """Check for an open 3x3 block starting at (r, c)."""
-    for row in range(r, r + 3):
-        for col in range(c, c + 2):
-            if grid[row][col].walls[Direction.EAST]:
-                return False
-
-    for row in range(r, r + 2):
-        for col in range(c, c + 3):
-            if grid[row][col].walls[Direction.SOUTH]:
-                return False
-    return True
