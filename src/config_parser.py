@@ -20,7 +20,8 @@ def _validate_format(archive: str) -> None:
                 if not line or line.startswith('#'):
                     continue
                 if not re.match(r'^[^=]+=[^=]+$', line):
-                    raise SyntaxError(f"Syntax error: line {i} not in KEY=VALUE format: '{line}'")
+                    raise SyntaxError(f"Syntax error: line {i}"
+                                      f"not in KEY=VALUE format: '{line}'")
     except FileNotFoundError:
         raise FileNotFoundError(f"File '{archive}' not found.")
 
@@ -31,7 +32,8 @@ def _check_required_keys() -> None:
         'WIDTH', 'HEIGHT', 'ENTRY', 'EXIT', 'OUTPUT_FILE', 'PERFECT',
     ]
     for key in keys:
-        if (os.getenv(key) is None and os.getenv(key.lower()) is None) or os.getenv(key) == "":
+        if (os.getenv(key) is None
+                and os.getenv(key.lower()) is None) or os.getenv(key) == "":
             raise ValueError(f"Missing required key '{key}' in config file")
 
 
